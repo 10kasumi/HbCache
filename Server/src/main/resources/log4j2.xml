@@ -9,7 +9,7 @@
     使用时通过:${name}
     -->
     <properties>
-        <property name="LOG_HOME">E:/logs</property>
+        <property name="LOG_HOME">E:/logs/server</property>
     </properties>
 
     <!-- 日志处理 -->
@@ -31,8 +31,8 @@
 
         <!-- 按照一定规则拆分的日志文件的appender -->  <!-- 拆分后的文件 -->
         <!-- filePattern="${LOG_HOME}/$${date:yyyy-MM-dd}/myrollog-%d{yyyy-MM-dd-HH-mm}-%i.log"> -->
-        <RollingFile name="rollingFile" fileName="${LOG_HOME}/HbCacheLog.log"
-                     filePattern="${LOG_HOME}/$${date:yyyy-MM-dd}/HbCacheLog-%d{yyyy-MM-dd}-%i.log">
+        <RollingFile name="rollingFile" fileName="${LOG_HOME}/HbCacheServerLog.log"
+                     filePattern="${LOG_HOME}/$${date:yyyy-MM-dd}/HbCacheServerLog-%d{yyyy-MM-dd}-%i.log">
             <!-- 日志级别过滤器 -->
             <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
             <!-- 日志消息格式 -->

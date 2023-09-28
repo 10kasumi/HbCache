@@ -16,12 +16,15 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 public class HbClient {
+    private static final Logger LOGGER = LogManager.getLogger(HbClient.class);
+
     private static String host = null;
     private static Integer port = 0;
 
@@ -33,7 +36,7 @@ public class HbClient {
         NioEventLoopGroup group = new NioEventLoopGroup();
         MessageCodecSharable messageCodec = new MessageCodecSharable();
 
-        LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
+        LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.channel(NioSocketChannel.class);
@@ -55,7 +58,7 @@ public class HbClient {
                         }
                     });
                     ch.pipeline().addLast(new MessageProtocolFrameDecoder());
-//                    ch.pipeline().addLast(LOGGING_HANDLER);
+                    ch.pipeline().addLast(LOGGING_HANDLER);
                     ch.pipeline().addLast(messageCodec);
                     ch.pipeline().addLast(new CommandReceiveHandler());
                 }
@@ -64,7 +67,7 @@ public class HbClient {
             ChannelFuture channelFuture = channel.closeFuture();
             channelFuture.sync();
         } catch (Exception e) {
-            log.error("client error", e);
+            LOGGER.error("client error! ! !");
         } finally {
             group.shutdownGracefully();
         }

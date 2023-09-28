@@ -21,11 +21,14 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 public class CacheServer {
+    private static final Logger LOGGER = LogManager.getLogger(CacheServer.class);
+
     private ServerNode serverNode;
 
     public ServerNode getServerNode() {
@@ -39,7 +42,7 @@ public class CacheServer {
     public void initServer(){
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
-        LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
+        LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.INFO);
         MessageCodecSharable messageCodec = new MessageCodecSharable();
 
         DeleteMessageHandler deleteMessageHandler = new DeleteMessageHandler();
@@ -104,7 +107,7 @@ public class CacheServer {
                             IdleStateEvent event = (IdleStateEvent) evt;
                             // 触发了读空闲事件
                             if (event.state() == IdleState.READER_IDLE) {
-                                log.debug("已经 15分钟 没有读到数据了");
+                                LOGGER.info("已经有2分钟没有消息了");
                                 ctx.channel().close();
                             }
                         }
@@ -170,7 +173,7 @@ public class CacheServer {
             ChannelFuture channelFuture = channel.closeFuture();
             channelFuture.sync();
         } catch (InterruptedException e) {
-            log.error("server error", e);
+            LOGGER.error("server error");
         } finally {
             boss.shutdownGracefully();
             worker.shutdownGracefully();
